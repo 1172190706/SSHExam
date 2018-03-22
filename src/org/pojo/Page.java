@@ -11,6 +11,7 @@ public class Page {
 	private Integer totalSize;
 	
 	private List<Flight> fArr = new ArrayList<Flight>();
+	private List<City> cArr = new ArrayList<City>();
 	
 	public Page() {
 		curPage=1;
@@ -20,7 +21,7 @@ public class Page {
 	@Override
 	public String toString() {
 		return "Page [curPage=" + curPage + ", totalPage=" + totalPage + ", curSize=" + curSize + ", totalSize="
-				+ totalSize + ", fArr=" + fArr + "]";
+				+ totalSize + ", fArr=" + fArr + ", cArr=" + cArr + "]";
 	}
 
 	public Integer getCurPage() {
@@ -62,5 +63,15 @@ public class Page {
 	public void setfArr(List<Flight> fArr) {
 		this.fArr = fArr;
 	}
+
+	public List<City> getcArr() {
+		return cArr;
+	}
+
+	public void setcArr(List<City> cArr) {
+		this.cArr = cArr;
+	}
+	
+	
 
 }

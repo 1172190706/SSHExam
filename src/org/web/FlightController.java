@@ -1,5 +1,7 @@
 package org.web;
 
+import java.sql.ResultSet;
+
 import javax.annotation.Resource;
 
 import org.pojo.City;
@@ -34,8 +36,9 @@ public class FlightController {
 	public String List(ModelMap map,Flight flight,String curSize,String curPage) {
 		Page page = new Page();
 	    System.out.println("controller:list");	
-	    System.out.println(curSize);
-	    System.out.println(curPage);
+	    System.out.println("curSize:"+curSize);
+	    System.out.println("curPage:"+curPage);
+	    System.out.println("page"+page);
 		// 判断 赋值
 		if (!isN(curPage)) {
 			page.setCurPage(Integer.parseInt(curPage));
@@ -45,6 +48,7 @@ public class FlightController {
 		}
 	    
 		String flightSql="select * from flight where 1=1 ";
+	
 	
 		if(flight!=null&&flight.getCity()!=null&&flight.getCity().getCityID()!=null){
 			flightSql+=" and starCityID = "+flight.getCity().getCityID();
@@ -60,15 +64,29 @@ public class FlightController {
 		
 		flightSql+="  ORDER BY flightID desc ";
 		
+			// limit 第一个参数
+			int start = (page.getCurPage() - 1) * page.getCurSize();
+			// 拼接好的分页查询sql
+			flightSql += " limit " + start + " , " + page.getCurSize();
+		
 		System.out.println("list:"+flightSql);
 		
 		java.util.List<Flight> ff = fs.selectAllFlight(flightSql);
 		System.out.println("list:ff:"+ff);
-		map.put("page", page);
+		page.setfArr(ff);
 		
+		String flightSqlCount = "select * from flight";
+		java.util.List<Flight> ffc = fs.selectAllFlight(flightSqlCount);
+		page.setTotalSize(ffc.size());
+        page.setTotalPage((int)Math.ceil(page.getTotalSize()*1.0/page.getCurSize()));	
+		System.out.println("totalsize:"+page.getTotalSize());
+		System.out.println("totalpage:"+page.getTotalPage());
+        
 		String citySql="select * from city";
 		java.util.List<City> cl =cs.selectAllCIty(citySql);
-		map.put("cl", cl);
+		page.setcArr(cl);
+		
+		map.put("page", page);
 
 		return "list";
 	}

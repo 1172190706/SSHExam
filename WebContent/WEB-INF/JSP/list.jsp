@@ -16,16 +16,17 @@ src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
 src="${pageContext.request.contextPath}/js/bootstrap.js"></script>
 </head>
 <body>
+<%--  ${page}  --%>
 <form action="list">
 模糊查询：起飞城市：<select name="city.cityID">
 <option value="">---请选择起飞城市--</option>
-<c:forEach items="${cl}" var="c">
+<c:forEach items="${page.cArr}" var="c">
 <option value="${c.cityID}">${c.cityName}</option>
 </c:forEach>
    </select>
    到达城市：<select name="city1.cityID">
 <option value="">---请选择起飞城市--</option>
-<c:forEach items="${cl}" var="c">
+<c:forEach items="${page.cArr}" var="c">
 <option value="${c.cityID}">${c.cityName}</option>
 </c:forEach>
    </select>
@@ -48,7 +49,7 @@ src="${pageContext.request.contextPath}/js/bootstrap.js"></script>
 </tr>
 
 <!-- <input type="checkbox" value="${user.id }" name="id"> -->
-<c:forEach items="${ff}" var="f">
+<c:forEach items="${page.fArr}" var="f">
 <tr>
 <td><input type="checkbox" name="id"  value="${f.flightID}" >
 </td>
@@ -60,14 +61,14 @@ src="${pageContext.request.contextPath}/js/bootstrap.js"></script>
 </tr>
 </c:forEach>
 <tr>
-<td colspan="5" style="border: none">${ff=="[]"?"  没有查出您要的数据！":""}</td>
+<td colspan="5" style="border: none">${page.fArr=="[]"?"  没有查出您要的数据！":""}</td>
 </tr>
 <tr>
 <td><button onclick="delSome()" class="btn btn-danger" >批量删除</button></td>
-<td><a href="">首页</a></td>
-<td><a href="">上一页</a></td>
-<td><a href="">下一页</a></td>
-<td><a href="">尾页</a></td>
+<td><a href="list?curPage=1">首页</a></td>
+<td><a href="list?curPage=${page.curPage-1<1?page.curPage:page.curPage-1}">上一页</a></td>
+<td><a href="list?curPage=${page.curPage+1>page.totalPage?page.totalPage:page.curPage+1}">下一页</a></td>
+<td><a href="list?curPage=${page.totalPage}">尾页</a></td>
 <td></td>
 </tr>
 </table>
