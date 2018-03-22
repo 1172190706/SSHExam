@@ -16,7 +16,7 @@ src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
 src="${pageContext.request.contextPath}/js/bootstrap.js"></script>
 </head>
 <body>
-<%--  ${page}  --%>
+<%--    ${page}  --%>
 <form action="list">
 模糊查询：起飞城市：<select name="city.cityID">
 <option value="">---请选择起飞城市--</option>
@@ -65,11 +65,32 @@ src="${pageContext.request.contextPath}/js/bootstrap.js"></script>
 </tr>
 <tr>
 <td><button onclick="delSome()" class="btn btn-danger" >批量删除</button></td>
-<td><a href="list?curPage=1">首页</a></td>
-<td><a href="list?curPage=${page.curPage-1<1?page.curPage:page.curPage-1}">上一页</a></td>
-<td><a href="list?curPage=${page.curPage+1>page.totalPage?page.totalPage:page.curPage+1}">下一页</a></td>
-<td><a href="list?curPage=${page.totalPage}">尾页</a></td>
-<td></td>
+<td><a href="list?curPage=1&curSize=${page.curSize}">首页</a></td>
+<td><a href="list?curPage=${page.curPage-1<1?page.curPage:page.curPage-1}&curSize=${page.curSize}">上一页</a></td>
+<td><a href="list?curPage=${page.curPage+1>page.totalPage?page.totalPage:page.curPage+1}&curSize=${page.curSize}">下一页</a></td>
+<td><a href="list?curPage=${page.totalPage}&curSize=${page.curSize}">尾页</a></td>
+<td width="300">
+ <form action="list" id="page" >
+ <input type="hidden" name="curSize" value="${page.curSize}">
+ 第<select name="curPage" onchange="page.submit()">
+ 	 <c:forEach  begin="1" end="${page.totalPage}" varStatus="s">
+ 	 <option value="${s.index}" ${s.index==page.curPage?"selected":""}>${s.index}</option>
+ 	 </c:forEach>
+					</select>
+ 页 
+ </form>
+
+ <form action="list" id="page1">
+   每页显示<select name="curSize" onchange="page1.submit()">
+ 	 <option value="3" ${3==page.curSize?"selected":""}>3</option>
+ 	 <option value="5" ${5==page.curSize?"selected":""}>5</option>
+ 	 <option value="10" ${10==page.curSize?"selected":""}>10</option>
+ 	 <option value="15" ${15==page.curSize?"selected":""}>15</option>
+					</select>
+ 行
+ </form>
+ 
+</td>
 </tr>
 </table>
 
@@ -77,7 +98,7 @@ src="${pageContext.request.contextPath}/js/bootstrap.js"></script>
 
 $(function(){
 	
-/* 	在做复选框全选按钮的时候，出现了一个问题，使用语句$.attr('checked',true)，将复选框的属性改为被选中，
+   /*在做复选框全选按钮的时候，出现了一个问题，使用语句$.attr('checked',true)，将复选框的属性改为被选中，
          在chrome浏览器中第一次点击有效后面就不行了，IE8倒是没有问题。
 	百度了很久找到原因是HTML的属性分为attribute和property，暂且将后者称为特性。
 	checked属性即分为attribute->checked，和property->true,false。
